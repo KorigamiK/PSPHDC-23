@@ -7,32 +7,41 @@ project(
 	LANGUAGES CXX
 )
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp network.cpp network.hpp)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
 if (PSP)
 
+	set(DEFAULT_STUBS
+		pspdebug 
+		pspdisplay 
+		pspge 
+		pspctrl 
+		pspnet 
+		pspnet_apctl
+    )
+    
     set(LIBS
-        psphttp
-        pspgu
-        pspge
-        pspdisplay
-        pspvram
-        pspaudio
-        pspvfpu
-        psphprm
-        curl
-        polarssl
-        z
-        bz2
-        SDL2main
-        SDL2_ttf
-        SDL2
-        freetype
-        pspctrl
-        png
-        GL
+		stdc++
+		SDL2main
+		SDL2
+		SDL2_ttf
+		SDL2_gfx
+		png
+		GL
+		freetype
+		z
+		pspvram
+		pspvfpu
+		pspgu
+		pspgum
+		psphprm
+		pspaudio
+		bz2
+		psphttp
+		curl
+		polarssl
     )
 
 else()
@@ -46,7 +55,7 @@ else()
 
 endif()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE ${LIBS} ${DEFAULT_STUBS})
 
 if (PSP)
 
