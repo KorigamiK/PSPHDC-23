@@ -15,6 +15,11 @@
 				"CMAKE_BUILD_TYPE": "Release",
 				"CMAKE_TOOLCHAIN_FILE": "/usr/local/pspdev/psp/share/pspdev.cmake",
 				"CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
+			},
+			"environment": {
+				"PSPDEV": "/usr/local/pspdev",
+				"PSPSDK": "/usr/local/pspdev/psp/sdk",
+				"PATH": "/usr/local/pspdev/bin:/usr/local/pspdev/psp/bin:$PATH"
 			}
 		},
 		{
