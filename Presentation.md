@@ -21,6 +21,8 @@ layout: false
 
 # Introduction
 
+## cURL
+
 `libcurl` is a free and easy-to-use client-side URL transfer library,
 supporting many protocols like FTP, TFTP, GOPHER, HTTP, HTTPS, and more.
 
@@ -89,7 +91,14 @@ to have a fully working TLS 1.2 solution to connect to secure HTTPS servers.
 
 # Demo
 
-With the background out of the way, Here are some examples.
+## How?
+
+Let's take a look at what we can use to build these apps,
+which allows for maximum cross-platform compatibility.
+
+| | | |
+| :--- | :----: | ---: |
+| ![c/c++](https://ms-vscode.gallerycdn.vsassets.io/extensions/ms-vscode/cpptools/1.15.1/1679529633699/Microsoft.VisualStudio.Services.Icons.Default) | ![cmake](https://twxs.gallerycdn.vsassets.io/extensions/twxs/cmake/0.0.17/1488841920286/Microsoft.VisualStudio.Services.Icons.Default) | ![sdl2](https://www.libsdl.org/media/SDL_logo.png) |
 
 ## Example Projects
 
@@ -124,11 +133,12 @@ and shows it on the screen.
 ### See it in action
 
 <div style="text-align:center">
-<video width="80%" controls loop muted>
- <source
- src="https://user-images.githubusercontent.com/72932688/228461499-6844f137-06b4-4e73-82e5-32a2fa38a97e.MOV"
- type="video/mp4">
-</video>
+  <video width="80%" controls loop muted>
+    <source
+      src="https://user-images.githubusercontent.com/72932688/228461499-6844f137-06b4-4e73-82e5-32a2fa38a97e.MOV"
+      type="video/mp4"
+    >
+  </video>
 </div>
 
 ---
@@ -137,7 +147,22 @@ and shows it on the screen.
 
 - It reopens the PSP for the internet age, and opens the door for a lot of new possibilities.
 
-- Now you can create homebrew PSP apps with TLS 1.2 networking support:
+- Now you can create PSP homebrew apps with TLS 1.2 networking support:
   - you can download files,
   - connect to APIs,
   - and upload data, from any HTTPS web server
+
+- Patch old homebrew to a working state, and make them work again.
+
+- More Cross-platform homebrew apps, and more open-source projects.
+
+---
+
+class: middle, inverse
+
+# Resources / References
+
+- [PSP-SDK Net Resolver sample](https://github.com/pspdev/pspsdk/tree/master/src/samples/net/resolver)
+- [PSP-Maps source code](https://github.com/PSP-Archive/PSP-Maps)
+- [libcurl sample](https://github.com/KorigamiK/PSP-Net-libcurl) (with sceGu)
+- [Jokr source code](https://github.com/KorigamiK/PSPHDC-23/tree/demo-app/Jokr) (with auto access point connection)
