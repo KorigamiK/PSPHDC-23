@@ -187,9 +187,8 @@ int main(int argc, char *argv[])
         SDL_RenderPresent(renderer);
     }
 
-    stopNetworking();
-
     cleanup();
+    stopNetworking();
 
     return 0;
 }
