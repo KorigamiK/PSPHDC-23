@@ -104,6 +104,10 @@ and shows it on the screen.
 - Cross-platform builds for Linux, Windows, and PSP
 - SDL2 for graphics and input
 
+### See it in action!
+
+https://user-images.githubusercontent.com/72932688/228461499-6844f137-06b4-4e73-82e5-32a2fa38a97e.MOV
+
 ---
 
 # Future Implications & Ideas
