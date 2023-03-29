@@ -7,7 +7,7 @@ project(
 	LANGUAGES CXX
 )
 
-add_executable(${PROJECT_NAME} main.cpp network.cpp network.hpp)
+add_executable(${PROJECT_NAME} main.cpp network.hpp)
 
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_17)
 
