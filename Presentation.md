@@ -35,6 +35,8 @@ PolarSSL offers an SSL library with an intuitive API and readable source code in
 
 > Note: [polarSSL](https://polarssl.org/) was later acquired by ARM and is now known as [mbedTLS](https://www.trustedfirmware.org/projects/mbed-tls/).
 
+> Note 2: the PSP has internal http/ssl libraries, but those libs are old, and you can't connect to current web servers due to outdated ciphers and protocols.
+
 ---
 
 # Implementation
@@ -86,7 +88,7 @@ With the background out of the way, Here are some examples.
 ## Jokr
 
 Jokr is a simple app that fetches a random joke
-from [icanhazdadjoke.com](https://icanhazdadjoke.com/),
+from [https://icanhazdadjoke.com](https://icanhazdadjoke.com/),
 and shows it on the screen.
 
 <div style="text-align:center">
@@ -103,6 +105,7 @@ and shows it on the screen.
 
 - Cross-platform builds for Linux, Windows, and PSP
 - SDL2 for graphics and input
+- [Open Source](https://github.com/KorigamiK/PSPHDC-23/tree/main/Jokr)
 
 ### See it in action!
 
@@ -112,11 +115,9 @@ https://user-images.githubusercontent.com/72932688/228461499-6844f137-06b4-4e73-
 
 # Future Implications & Ideas
 
-!TODO
+- It reopens the PSP for the internet age, and opens the door for a lot of new possibilities.
 
-I think the biggest thing is that now you can build networking - related apps with TLS 1.2 support,
-so you can actually download files from any https site
-(the PSP had some internal http and ssl libraries, but those are old,
-and then you can't connect to current servers)
-
-It reopens the PSP for the internet age, and opens the door for a lot of new possibilities.
+- Now you can create homebrew PSP apps with TLS 1.2 networking support:
+  - you can download files, 
+  - connect to APIs, 
+  - and upload data, from any HTTPS web server
