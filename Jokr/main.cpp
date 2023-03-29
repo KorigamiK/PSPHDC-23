@@ -7,6 +7,8 @@
 
 #include "network.hpp"
 
+static constexpr const bool verbose = true;
+
 static unsigned int windowWidth = 480;
 static unsigned int windowHeight = 272;
 
@@ -21,6 +23,10 @@ static SDL_Rect jokeRect = {0, 0, 0, 0};
 static SDL_Rect jokeButtonRect = {0, 0, 0, 0};
 static SDL_Texture *jokeButtonTexture = nullptr;
 static SDL_Texture *jokeTexture = nullptr;
+static bool loading = false;
+static SDL_Rect loadingRect = {0, 0, 0, 0};
+static SDL_Texture *loadingTexture = nullptr;
+
 static bool running = true;
 
 void init()
@@ -59,7 +65,27 @@ void init()
     jokeRect.x = windowWidth / 2 - jokeRect.w / 2;
     jokeRect.y = windowHeight / 2 - jokeRect.h / 2;
 
+    SDL_Surface *loadingSurface = TTF_RenderUTF8_Blended(baseFont, "Loading...", {0, 0, 0, 255});
+    loadingTexture = SDL_CreateTextureFromSurface(renderer, loadingSurface);
+    SDL_FreeSurface(loadingSurface);
+    SDL_QueryTexture(loadingTexture, nullptr, nullptr, &loadingRect.w, &loadingRect.h);
+    loadingRect.w /= 1.5;
+    loadingRect.h /= 1.5;
+    loadingRect.x = windowWidth / 2 - loadingRect.w / 2;
+    loadingRect.y = windowHeight - loadingRect.h - 20;
+
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+}
+
+void render()
+{
+
+    SDL_RenderCopy(renderer, titleTexture, nullptr, &titleRect);
+    SDL_RenderCopy(renderer, jokeButtonTexture, nullptr, &jokeButtonRect);
+    SDL_RenderCopy(renderer, jokeTexture, nullptr, &jokeRect);
+
+    if (loading)
+        SDL_RenderCopy(renderer, loadingTexture, nullptr, &loadingRect);
 }
 
 size_t writeCallback(char *contents, size_t size, size_t nmemb, void *userp)
@@ -68,13 +94,13 @@ size_t writeCallback(char *contents, size_t size, size_t nmemb, void *userp)
     return size * nmemb;
 }
 
-void getRequest(const std::string &url, std::string &buffer, bool verbose = false)
+CURLcode getRequest(const std::string &url, std::string &buffer, bool verbose = false)
 {
     CURL *curl = curl_easy_init();
     if (!curl)
     {
         SDL_Log("Failed to initialize curl");
-        exit(1);
+        return CURLE_FAILED_INIT;
     }
 
     curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
@@ -93,18 +119,24 @@ void getRequest(const std::string &url, std::string &buffer, bool verbose = fals
 
     CURLcode res = curl_easy_perform(curl);
     if (res != CURLE_OK)
-    {
         SDL_Log("Failed to perform curl request: %s", curl_easy_strerror(res));
-        exit(1);
-    }
 
     curl_easy_cleanup(curl);
+    return res;
 }
 
 void getNewJoke()
 {
+    loading = true;
+    SDL_RenderClear(renderer);
+    render();
+    SDL_RenderPresent(renderer);
+
     std::string response;
-    getRequest("https://icanhazdadjoke.com/", response, false);
+
+    if (getRequest("https://icanhazdadjoke.com/", response, verbose) != CURLE_OK)
+        response = "Failed to get joke :(";
+
     SDL_Log("Response: %s", response.c_str());
 
     SDL_Surface *jokeSurface = TTF_RenderUTF8_Blended_Wrapped(jokeFont, response.c_str(), {0, 0, 0, 255}, windowWidth - 20);
@@ -113,6 +145,8 @@ void getNewJoke()
     SDL_QueryTexture(jokeTexture, nullptr, nullptr, &jokeRect.w, &jokeRect.h);
     jokeRect.x = windowWidth / 2 - jokeRect.w / 2;
     jokeRect.y = windowHeight / 2 - jokeRect.h / 2;
+
+    loading = false;
 }
 
 void cleanup()
@@ -120,12 +154,18 @@ void cleanup()
     SDL_DestroyTexture(titleTexture);
     SDL_DestroyTexture(jokeButtonTexture);
     SDL_DestroyTexture(jokeTexture);
+    SDL_DestroyTexture(loadingTexture);
+    printf("Textures destroyed\n");
     TTF_CloseFont(baseFont);
     TTF_CloseFont(jokeFont);
+    printf("Fonts closed\n");
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    printf("Window destroyed\n");
     TTF_Quit();
+    printf("TTF quit\n");
     SDL_Quit();
+    printf("SDL quit\n");
 }
 
 void handleInput()
@@ -160,6 +200,8 @@ void handleInput()
                 titleRect.x = windowWidth / 2 - titleRect.w / 2;
                 jokeButtonRect.x = windowWidth / 2 - jokeButtonRect.w / 2;
                 jokeRect.x = windowWidth / 2 - jokeRect.w / 2;
+                loadingRect.x = windowWidth / 2 - loadingRect.w / 2;
+                loadingRect.y = windowHeight - loadingRect.h - 20;
             }
             break;
         }
@@ -168,27 +210,25 @@ void handleInput()
 
 int main(int argc, char *argv[])
 {
-    startNetworking();
-
     init();
+
+    startNetworking(renderer);
 
     while (running)
     {
         handleInput();
 
         SDL_RenderClear(renderer);
-        SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-
-        SDL_RenderCopy(renderer, titleTexture, nullptr, &titleRect);
-        SDL_RenderCopy(renderer, jokeButtonTexture, nullptr, &jokeButtonRect);
-        SDL_RenderCopy(renderer, jokeTexture, nullptr, &jokeRect);
-
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+
+        render();
+
         SDL_RenderPresent(renderer);
     }
 
-    cleanup();
     stopNetworking();
+
+    cleanup();
 
     return 0;
 }
