@@ -41,7 +41,9 @@ if (PSP)
 		bz2
 		psphttp
 		curl
-		polarssl
+		mbedtls
+		mbedcrypto
+		mbedx509
     )
 
 else()
